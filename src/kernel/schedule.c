@@ -131,8 +131,10 @@ NOTRACE void __attribute__((noreturn)) kernel_sleep(void)
         kern_unlock();
 
     /* loop to absorb spurious wakeups from hlt - happens on some platforms (e.g. xen) */
-    while (1)
-        ;
+    while (1) {
+        rprintf("...wfi...\n");
+        wait_for_interrupt();
+    }
 //        asm volatile("sti; hlt" ::: "memory");
 }
 
@@ -162,7 +164,7 @@ NOTRACE void __attribute__((noreturn)) runloop_internal()
         }
 
         /* should be a list of per-runloop checks - also low-pri background */
-        mm_service();
+//        mm_service();
         update_timer();
 
         kern_unlock();
@@ -171,8 +173,8 @@ NOTRACE void __attribute__((noreturn)) runloop_internal()
     if (!shutting_down && (t = dequeue(thread_queue)) != INVALID_ADDRESS)
         run_thunk(t, cpu_user);
 // XXX redo with frame pause
-    if (ci->current_thread)
-        thread_pause(ci->current_thread);
+//    if (ci->current_thread)
+//        thread_pause(ci->current_thread);
 
     kernel_sleep();
 }    
