@@ -348,6 +348,22 @@ void kernel_shutdown(int status)
     vm_exit(status);
 }
 
+closure_function(0, 1, void, hv_sync_complete, status, s)
+{
+    HV_SHUTDOWN();
+}
+
+void hv_kernel_shutdown()
+{
+    shutting_down = true;
+    apic_ipi(TARGET_EXCLUSIVE_BROADCAST, 0, shutdown_vector);
+    if (root_fs) {
+        storage_sync(closure(heap_general(&heaps), hv_sync_complete));
+        runloop();
+    }
+    HV_SHUTDOWN();
+}
+
 u64 total_processors = 1;
 
 #ifdef SMP_ENABLE

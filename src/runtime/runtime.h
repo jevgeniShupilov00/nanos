@@ -33,6 +33,7 @@ void print_u64(u64 s);
 
 void halt(char *format, ...) __attribute__((noreturn));
 void kernel_shutdown(int status) __attribute__((noreturn));
+void hv_kernel_shutdown() __attribute__((noreturn));
 void vm_exit(u8 code) __attribute__((noreturn));
 void print_stack_from_here();
 
