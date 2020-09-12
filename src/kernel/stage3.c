@@ -8,6 +8,7 @@
 #include <symtab.h>
 #include <virtio/virtio.h>
 
+#if 0
 closure_function(2, 1, status, read_program_complete,
                  process, kp, tuple, root,
                  buffer, b)
@@ -93,6 +94,7 @@ closure_function(1, 1, buffer_handler, each_telnet_connection,
     apply(out, response);
     return closure(h, test_recv, h, out);
 }
+#endif
 
 /* http debug test */
 #if 0
@@ -138,6 +140,8 @@ closure_function(1, 3, void, each_test_request,
 }
 #endif
 
+// TODO unix
+#if 0
 closure_function(3, 0, void, startup,
                  kernel_heaps, kh, tuple, root, filesystem, fs)
 {
@@ -177,6 +181,14 @@ closure_function(3, 0, void, startup,
     filesystem_read_entire(fs, pro, heap_backed(kh), pg, closure(general, read_program_fail));
     closure_finish();
 }
+#else
+closure_function(3, 0, void, startup,
+                 kernel_heaps, kh, tuple, root, filesystem, fs)
+{
+    rprintf("IN STARTUP\n");
+    closure_finish();
+}
+#endif
 
 thunk create_init(kernel_heaps kh, tuple root, filesystem fs)
 {
